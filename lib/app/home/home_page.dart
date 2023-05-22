@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _subtitleController = TextEditingController();
+  List<Todo> filteredTodosList = [];
 
   final List<Todo> _todoList = [
     Todo(title: 'Padaria', subtitle: 'Ir a padaria comprar leite em pó desnatado e 3 reais de pão às 15:30'),
@@ -22,6 +23,19 @@ class _HomePageState extends State<HomePage> {
         title: 'Coworking - Sertão Desenvolve',
         subtitle: 'Ir ao coworking me preparar tecnicamente para a quantidade de conteúdo irá ter no SERCOMP.'),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredTodosList = _todoList; // Initialize filteredPeople with all the people
+  }
+
+  void filterPeople(String title) {
+    setState(() {
+      filteredTodosList = _todoList.where((todo) => todo.title.toLowerCase().contains(title.toLowerCase())).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // final List<String> items =
@@ -40,6 +54,9 @@ class _HomePageState extends State<HomePage> {
           children: [
             Card(
               child: TextField(
+                  onChanged: (value) {
+                    filterPeople(value);
+                  },
                   controller: _titleController,
                   textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(labelText: "Título", border: OutlineInputBorder())),
@@ -58,11 +75,11 @@ class _HomePageState extends State<HomePage> {
                 height: 25,
               ),
             ),
-            Text('V Sercomp'),
-            SizedBox(
+            const Text('Construindo um aplicativo completo com Flutter'),
+            const SizedBox(
               height: 15,
             ),
-            CustomListTileWidget(todosList: _todoList),
+            CustomListTileWidget(todosList: filteredTodosList),
           ],
         ),
       ),
